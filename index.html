@@ -28,13 +28,13 @@
             { name: "Ozidje", coords: [45.77921, 13.71346] },
             { name: "Ograda", coords: [45.78753, 13.70965] },
             { name: "Blok Brje", coords: [45.78234, 13.70174] },
-            { name: "Dolge njive", coords: [45.77187, 13.72205] },
+            { name: "Brške Dolge Njive", coords: [45.77187, 13.72205] },
             { name: "Prelovci", coords: [45.80755, 13.78482] },
             { name: "Močilo", coords: [45.80435, 13.78801] },
             { name: "Kosmati Hrib", coords: [45.79292, 13.76860] },
             { name: "Gmajna", coords: [45.79842, 13.77549] },
             { name: "Gredine", coords: [45.79085, 13.78704] },
-            { name: "Pdunce", coords: [45.81382, 13.77457] },
+            { name: "Coljavske Pdunce", coords: [45.81382, 13.77457] },
             { name: "Java", coords: [45.79022, 13.77550] },
             { name: "Prjovščina", coords: [45.79507, 13.79978] },
             { name: "Oklade", coords: [45.80297, 13.79376] },
@@ -52,11 +52,11 @@
             { name: "Nadruški Bori", coords: [45.78789, 13.73065] },
             { name: "Preža Kompleks", coords: [45.78536, 13.74660] },
             { name: "Plesi", coords: [45.79713, 13.75869] },
-            { name: "Pdunce", coords: [45.80223, 13.75971] },
+            { name: "Volčjegrajske Pdunce", coords: [45.80223, 13.75971] },
             { name: "Kompleks", coords: [45.79232, 13.75378] },
             { name: "Polje", coords: [45.79741, 13.71924] },
             { name: "Mersce", coords: [45.78856, 13.69808] },
-            { name: "Dolge Njive", coords: [45.79216, 13.71298] },
+            { name: "Gorjanske Dolge Njive", coords: [45.79216, 13.71298] },
             { name: "Kovčiči", coords: [45.80273, 13.72457] },
             { name: "Jurjevšče", coords: [45.80043, 13.72817] },
             { name: "Hovalice", coords: [45.77537, 13.74425] },
@@ -300,7 +300,7 @@ locations.forEach(location => {
             color: 'green',      // Border color
             weight: 3,           // Border thickness
             fillColor: 'rgba(0,128,0,0.3)', // Transparent green fill
-            fillOpacity: 0.4,    // Fill transparency
+            fillOpacity: 0.3,    // Fill transparency
             pane: 'polygonPane'  // Add the polygon to the custom pane
         }).addTo(map);
 
@@ -309,17 +309,25 @@ locations.forEach(location => {
 
         // Get GPS location and add a marker
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
+        navigator.geolocation.getCurrentPosition(
+            position => {
                 const { latitude, longitude } = position.coords;
 
                 // Add a marker for the user's location
-                L.marker([latitude, longitude]).addTo(map).bindPopup('Moja lokacija').openPopup();
-            }, error => {
-                alert('Lokacije ni mogoče zaznati: ' + error.message);
-            });
-        } else {
-            alert('Vaša naprava ne dovoli geolokacije.');
-        }
-    </script>
+            L.marker([latitude, longitude]).addTo(map).bindPopup('Moja lokacija').openPopup();
+            },
+            error => {
+                const errorMessages = {
+                    1: "Dovoljenje zavrnjeno. Omogoči lokacijske storitve.",
+                    2: "Pozicija ni dostopna. Poskusite kasneje.",
+                    3: "Časovna omejitev zahteve je potekla. Preverite internetno povezavo."
+                };
+                alert(errorMessages[error.code] || "APrišlo je do neznane napake.");
+            }
+        );
+    } else {
+        alert('Vaš brskalnik ne podpira geolokacije.');
+    }
+</script>
 </body>
 </html>
